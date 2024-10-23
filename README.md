@@ -1,4 +1,11 @@
-MolSim
+MolSim GROUP D
 ===
 
-The Molecular Dynamics teaching code.
+
+
+# build
+cbuild
+# make 
+cmake .
+# run
+run
