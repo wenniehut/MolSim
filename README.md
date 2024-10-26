@@ -4,8 +4,8 @@ MolSim GROUP D
 
 
 # build
-cbuild
+mkdir build & cd build & cmake ..
 # make 
-cmake .
+make
 # run
 run
