@@ -66,23 +66,27 @@ int main(int argc, char *argsv[]) {
     std::cout << "Iteration " << iteration << " finished." << std::endl;
 
     current_time += delta_t;
+    break; // here temporary changed
   }
 
   std::cout << "output written. Terminating..." << std::endl;
   return 0;
 }
 
+
 void calculateF() {
   std::list<Particle>::iterator iterator;
   iterator = particles.begin();
 
   for (auto &p1 : particles) {
+    std::cout << p1.getX();
+
     for (auto &p2 : particles) {
+      // std :: array<double, 3> x_vector = p1.x;
       // @TODO: insert calculation of forces here!
     }
   }
 }
-
 void calculateX() {
   for (auto &p : particles) {
     // @TODO: insert calculation of position updates here!
