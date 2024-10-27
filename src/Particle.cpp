@@ -10,6 +10,8 @@
 #include <iostream>
 #include "utils/ArrayUtils.h"
 
+
+
 Particle::Particle(int type_arg) {
   type = type_arg;
   std::cout << "Particle generated!" << std::endl;
@@ -52,6 +54,16 @@ const std::array<double, 3> &Particle::getOldF() const { return old_f; }
 double Particle::getM() const { return m; }
 
 int Particle::getType() const { return type; }
+///////////////////////////////////////////////////
+void Particle::setX(std::array<double, 3> x_arg) { x = x_arg; }
+void Particle::setV(std::array<double, 3> v_arg) {v = v_arg; }
+void Particle::setF(std::array<double, 3> f_arg) {f = f_arg; }
+void Particle::setOldF(std::array<double, 3> oldf_arg) {old_f = oldf_arg; }
+void Particle::setM(double marg) { m = marg; }
+void Particle::setType(int type_arg) { type = type_arg; }
+///////////////////////////////////////////////////
+
+
 
 std::string Particle::toString() const {
   std::stringstream stream;
@@ -59,6 +71,7 @@ std::string Particle::toString() const {
          << " old_f: " << old_f << " type: " << type;
   return stream.str();
 }
+
 
 bool Particle::operator==(Particle &other) {
   return (x == other.x) and (v == other.v) and (f == other.f) and

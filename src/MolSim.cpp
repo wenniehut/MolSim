@@ -6,6 +6,9 @@
 #include <iostream>
 #include <list>
 
+
+#include <cmath> // here
+
 /**** forward declaration of the calculation functions ****/
 
 /**
@@ -66,7 +69,7 @@ int main(int argc, char *argsv[]) {
     std::cout << "Iteration " << iteration << " finished." << std::endl;
 
     current_time += delta_t;
-    break; // here temporary changed
+    //break; // here temporary changed
   }
 
   std::cout << "output written. Terminating..." << std::endl;
@@ -79,22 +82,55 @@ void calculateF() {
   iterator = particles.begin();
 
   for (auto &p1 : particles) {
-    std::cout << p1.getX();
-
+    p1.setOldF(p1.getF()); // change Old force and Force
+    std::array<double, 3> cal_f = {0,0,0};
     for (auto &p2 : particles) {
+
+      if(&p1 == &p2) {continue;}
+
+      std::array<double, 3> vec = p2.getX() - p1.getX();
+
+      double val = p1.getM() * p2.getM();
+      double tmp = 0.0;
+      for(int i = 0; i < 3; i++) {
+        tmp += vec[i] * vec[i];
+      }
+      tmp = pow(tmp, 3/2);
+      val /= tmp;
+
+      for(int i =0 ; i< 3; i++) {
+        vec[i] *= val;
+      }
+      for(int i=0 ; i< 3; i++) {
+        cal_f[i] += vec[i];
+      }
       // std :: array<double, 3> x_vector = p1.x;
       // @TODO: insert calculation of forces here!
     }
+    p1.setF(cal_f);
+    std::cout <<"THIS IS F" <<  p1.getF() << std::endl;
   }
 }
 void calculateX() {
   for (auto &p : particles) {
+    std::array<double, 3> vec = p.getX();
+    for(int i =0 ; i< 3; i++) {
+      vec[i] += delta_t * p.getV()[i];
+      vec[i] += (delta_t * delta_t * p.getF()[i]);
+      vec[i] /= 2 * p.getM();
+    }
+    p.setX(vec);
     // @TODO: insert calculation of position updates here!
   }
 }
 
 void calculateV() {
   for (auto &p : particles) {
+    std::array<double, 3> vec = p.getV();
+    for(int i =0 ; i< 3; i++) {
+      vec[i] += delta_t * (p.getF()[i] + p.getOldF()[i]) / (2 * p.getM());
+    }
+    p.setV(vec);
     // @TODO: insert calculation of veclocity updates here!
   }
 }

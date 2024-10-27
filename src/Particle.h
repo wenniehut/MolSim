@@ -68,6 +68,14 @@ public:
   double getM() const;
 
   int getType() const;
+ /////////////////
+  void setX(std::array<double, 3> x_arg);
+  void setV(std::array<double,3> v_arg);
+  void setF(std::array<double,3> f_arg);
+  void setOldF(std::array<double,3> oldf_arg);
+  void setM(double m_arg);
+  void setType(int type);
+ ////////////////////////
 
   bool operator==(Particle &other);
 
