@@ -8,6 +8,7 @@
 
 
 #include <cmath> // here
+#include "outputWriter/VTKWriter.h" // here
 
 /**** forward declaration of the calculation functions ****/
 
@@ -69,7 +70,6 @@ int main(int argc, char *argsv[]) {
     std::cout << "Iteration " << iteration << " finished." << std::endl;
 
     current_time += delta_t;
-    //break; // here temporary changed
   }
 
   std::cout << "output written. Terminating..." << std::endl;
@@ -108,7 +108,6 @@ void calculateF() {
       // @TODO: insert calculation of forces here!
     }
     p1.setF(cal_f);
-    std::cout <<"THIS IS F" <<  p1.getF() << std::endl;
   }
 }
 void calculateX() {
@@ -120,6 +119,7 @@ void calculateX() {
       vec[i] /= 2 * p.getM();
     }
     p.setX(vec);
+    std::cout << p << std::endl;
     // @TODO: insert calculation of position updates here!
   }
 }
@@ -141,4 +141,9 @@ void plotParticles(int iteration) {
 
   outputWriter::XYZWriter writer;
   writer.plotParticles(particles, out_name, iteration);
+
+  outputWriter::VTKWriter writer2;
+  writer2.writeFile(out_name, iteration,particles);
+
+
 }
