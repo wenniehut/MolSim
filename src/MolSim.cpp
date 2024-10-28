@@ -6,9 +6,14 @@
 #include <iostream>
 #include <list>
 
+///////////////////////////////////
+#include <cmath>
+#include "outputWriter/VTKWriter.h"
+#include <getopt.h>
+#include <cstdlib>
+//////////////////////////////////
 
-#include <cmath> // here
-#include "outputWriter/VTKWriter.h" // here
+
 
 /**** forward declaration of the calculation functions ****/
 
@@ -32,20 +37,41 @@ void calculateV();
  */
 void plotParticles(int iteration);
 
-constexpr double start_time = 0;
-constexpr double end_time = 1000;
-constexpr double delta_t = 0.014;
+// constexpr double start_time = 0;
+// constexpr double end_time = 1000;
+// constexpr double delta_t = 0.014;
+double start_time = 0;
+double end_time = 1000;
+double delta_t = 0.014;
 
 // TODO: what data structure to pick?
 std::list<Particle> particles;
 
+
 int main(int argc, char *argsv[]) {
 
   std::cout << "Hello from MolSim for PSE!" << std::endl;
-  if (argc != 2) {
+
+  if (argc < 2) {
     std::cout << "Erroneous programme call! " << std::endl;
     std::cout << "./molsym filename" << std::endl;
   }
+  else if(argc == 3) {
+    delta_t = atof(argsv[2]);
+  }
+  else if(argc == 4) {
+    delta_t = atof(argsv[2]);
+    end_time = atof(argsv[3]);
+  }
+  else if(argc > 4) {
+    std::cout << "Too many arguments!" << std::endl;
+  }
+  std::cout << "Testfilename: " << argsv[1] << std::endl;
+  std::cout << "Start Time: " << start_time << std::endl;
+  std::cout << "Time End: " << end_time << std::endl ;
+  std::cout << "Delta Time: " << delta_t << std::endl;
+
+
 
   FileReader fileReader;
   fileReader.readFile(particles, argsv[1]);
@@ -65,11 +91,12 @@ int main(int argc, char *argsv[]) {
 
     iteration++;
     if (iteration % 10 == 0) {
-      plotParticles(iteration);
+      plotParticles(iteration); // temporary
     }
     std::cout << "Iteration " << iteration << " finished." << std::endl;
 
     current_time += delta_t;
+
   }
 
   std::cout << "output written. Terminating..." << std::endl;
@@ -82,8 +109,11 @@ void calculateF() {
   iterator = particles.begin();
 
   for (auto &p1 : particles) {
+
     p1.setOldF(p1.getF()); // change Old force and Force
+
     std::array<double, 3> cal_f = {0,0,0};
+
     for (auto &p2 : particles) {
 
       if(&p1 == &p2) {continue;}
@@ -92,15 +122,17 @@ void calculateF() {
 
       double val = p1.getM() * p2.getM();
       double tmp = 0.0;
+
       for(int i = 0; i < 3; i++) {
         tmp += vec[i] * vec[i];
       }
-      tmp = pow(tmp, 3/2);
+      tmp = pow(sqrt(tmp), 3);
       val /= tmp;
 
       for(int i =0 ; i< 3; i++) {
         vec[i] *= val;
       }
+
       for(int i=0 ; i< 3; i++) {
         cal_f[i] += vec[i];
       }
@@ -108,6 +140,10 @@ void calculateF() {
       // @TODO: insert calculation of forces here!
     }
     p1.setF(cal_f);
+
+
+
+   // std::cout << "force: " << p1 << std::endl;
   }
 }
 void calculateX() {
@@ -115,11 +151,10 @@ void calculateX() {
     std::array<double, 3> vec = p.getX();
     for(int i =0 ; i< 3; i++) {
       vec[i] += delta_t * p.getV()[i];
-      vec[i] += (delta_t * delta_t * p.getF()[i]);
-      vec[i] /= 2 * p.getM();
+      vec[i] += (delta_t * delta_t * p.getF()[i]) / (2 * p.getM());
     }
     p.setX(vec);
-    std::cout << p << std::endl;
+    std::cout << "location: " << p << std::endl;
     // @TODO: insert calculation of position updates here!
   }
 }
@@ -131,6 +166,7 @@ void calculateV() {
       vec[i] += delta_t * (p.getF()[i] + p.getOldF()[i]) / (2 * p.getM());
     }
     p.setV(vec);
+    //std::cout << "v : "<< p << std::endl;
     // @TODO: insert calculation of veclocity updates here!
   }
 }
@@ -139,8 +175,8 @@ void plotParticles(int iteration) {
 
   std::string out_name("MD_vtk");
 
-  outputWriter::XYZWriter writer;
-  writer.plotParticles(particles, out_name, iteration);
+  //outputWriter::XYZWriter writer;
+  //writer.plotParticles(particles, out_name, iteration);
 
   outputWriter::VTKWriter writer2;
   writer2.writeFile(out_name, iteration,particles);
