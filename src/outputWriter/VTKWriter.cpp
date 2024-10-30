@@ -54,7 +54,7 @@ VTKFile_t VTKWriter::initializeOutput(int numParticles) {
     return vtk_file;
   }
 
-  void VTKWriter::writeFile(const std::string &filename, int iteration, std::list<Particle> &particles) {
+  void VTKWriter::writeFile(const std::string &filename, int iteration, std::vector<Particle> &particles) {
     std::stringstream strstr;
     strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".vtu";
 
