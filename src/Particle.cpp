@@ -1,15 +1,15 @@
-/*
- * Particle.cpp
+/**
+ * @file Particle.cpp
+ * @author eckhardw
+ * @brief this class represents a particle
+ * @date 23.02.2010
  *
- *  Created on: 23.02.2010
- *      Author: eckhardw
  */
 
 #include "Particle.h"
 
 #include <iostream>
 #include "utils/ArrayUtils.h"
-
 
 
 Particle::Particle(int type_arg) {
