@@ -12,6 +12,8 @@
 
 #include <list>
 
+#include <vector>
+
 namespace outputWriter {
 
 /**
