@@ -22,8 +22,6 @@ ParticleContainer::ParticleContainer(std::vector<Particle> particles,double star
   positions.reserve(particles.size());
   for(int i = 0 ; i< particles.size(); i++) {
     positions[i] = particles[i].getX();
-    std::cout << positions[i][0] << " " << positions[i][1] << " " << positions[i][2] << "\n";
-    std ::cout << particles[i].getX()[0] << " " << particles[i].getX()[1] << " " << particles[i].getX()[2] << "\n";
   }
 
   std::cout << "ParticleContainer generated!\n";
@@ -41,9 +39,36 @@ void ParticleContainer::addParticle(Particle particle){
   this->positions.push_back(particle.getX());
 }
 
+void ParticleContainer :: calculateF_v1() {
+  std::vector<Particle>::iterator iterator;
+  iterator = particles.begin();
+  for (auto &p1 : particles) {
+    p1.setOldF(p1.getF()); // update old force
+    std::array<double, 3> cal_f = {0,0,0};
+    for (auto &p2 : particles) {
+      if(&p1 != &p2) {
+        std::array<double, 3> vec = p2.getX() - p1.getX();
+        double tmp = 0.0;
+        for(int i = 0; i < 3; i++) {
+          tmp += vec[i] * vec[i];
+        }
+        tmp = pow(sqrt(tmp), 3);
+        if (tmp == 0 ) continue;// avoid division by zero
+        double val = p1.getM() * p2.getM();
+        val /= tmp;
+        for(int i=0 ; i< 3; i++) {
+          cal_f[i] += (vec[i]* val);
+        }
+        // @TODO: insert calculation of forces here!
+      }
+      p1.setF(cal_f);
+    }
+  }
+}
+
 
 //Calculates the force for all particles
-void ParticleContainer :: calculateF() {
+void ParticleContainer :: calculateF_v2() {
 
   for (int i = 0; i < particles.size(); i++) {
     particles[i].setOldF(particles[i].getF()); // update old force
@@ -105,7 +130,7 @@ void ParticleContainer:: calculateV(){
 }
 
 //Calculates the position, force and velocity for all particles
-void ParticleContainer:: calculate(){
+void ParticleContainer:: calculate(int version) {
    int iteration  = 0;
    double current_time = start_time;
 
@@ -114,7 +139,8 @@ void ParticleContainer:: calculate(){
     // calculate new x
     calculateX();
     // calculate new f
-    calculateF();
+    if(version == 1) calculateF_v1();
+    else calculateF_v2();
     // calculate new v
     calculateV();
 
@@ -129,8 +155,6 @@ void ParticleContainer:: calculate(){
     std::cout << "output written. Terminating..." << "\n";
     return;
 }
-
-
 
 void ParticleContainer :: plotParticles(int iteration) {
   std::cout << "Plotting Particles..." << "\n";

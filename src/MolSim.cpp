@@ -6,7 +6,6 @@
 #include <iostream>
 #include <list>
 
-
 #include "ParticleContainer.h"
 #include <cmath>
 #include "outputWriter/VTKWriter.h"
@@ -15,6 +14,7 @@
 #include <float.h>
 #include <unistd.h>
 #include <vector>
+#include <chrono>
 
 
 void plotParticles(int iteration);
@@ -63,6 +63,9 @@ int main(int argc, char *argsv[]) {
     }
   }
 
+  // start the timer
+  auto start = std::chrono::high_resolution_clock::now();
+
   // create a particle container for forwading the particles, start time, end time, delta_t and outputformat
   ParticleContainer particle_container = ParticleContainer(particles, start_time, end_time,delta_t, outputformat);
 
@@ -74,9 +77,18 @@ int main(int argc, char *argsv[]) {
   std::cout << "Output format: " << outputformat << "\n\n";
 
   // calculate the position, force and velocity for all particles and plot them
-  particle_container.calculate();
+  //version 2 as the default force calculation
+  particle_container.calculate(2);
 
   std::cout << "output written. Terminating..." << "\n";
+   
+  // stop the timer
+  auto end = std::chrono::high_resolution_clock::now();
+
+  // calculate the duration
+  std::chrono::duration<double> duration = end - start;
+  std::cout << "Duration: " << duration.count() << "s" << "\n";
+
   return 0;// exit without error
 }
 

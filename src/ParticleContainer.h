@@ -23,7 +23,9 @@ class ParticleContainer {
     void addParticle(Particle particle);
 
     //calculate the force for all particles
-    void calculateF();
+    void calculateF_v1();
+
+    void calculateF_v2();
 
      //calculate the position for all particles
     void calculateX();
@@ -32,7 +34,8 @@ class ParticleContainer {
     void calculateV();
 
     //calculate the position, force and velocity for all particles
-    void calculate();
+    //the two versions of the force calculation v1 
+    void calculate(int version);
 
     //Plots the particles in the container
     void plotParticles(int iterations);
