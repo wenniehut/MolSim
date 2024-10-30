@@ -11,8 +11,8 @@
 #include "outputWriter/VTKWriter.h"
 #include <getopt.h>
 #include <cstdlib>
+#include <float.h>
 //////////////////////////////////
-
 
 
 /**** forward declaration of the calculation functions ****/
@@ -72,7 +72,6 @@ int main(int argc, char *argsv[]) {
   std::cout << "Delta Time: " << delta_t << std::endl;
 
 
-
   FileReader fileReader;
   fileReader.readFile(particles, argsv[1]);
 
@@ -109,52 +108,54 @@ void calculateF() {
   iterator = particles.begin();
 
   for (auto &p1 : particles) {
-
     p1.setOldF(p1.getF()); // change Old force and Force
 
     std::array<double, 3> cal_f = {0,0,0};
 
     for (auto &p2 : particles) {
+      if(&p1 != &p2) {
+        std::array<double, 3> vec = p2.getX() - p1.getX();
 
-      if(&p1 == &p2) {continue;}
+        double val = p1.getM() * p2.getM();
 
-      std::array<double, 3> vec = p2.getX() - p1.getX();
+        double tmp = 0.0;
 
-      double val = p1.getM() * p2.getM();
-      double tmp = 0.0;
+        for(int i = 0; i < 3; i++) {
+          tmp += vec[i] * vec[i];
+        }
 
-      for(int i = 0; i < 3; i++) {
-        tmp += vec[i] * vec[i];
+        tmp = pow(sqrt(tmp), 3);
+
+        if (tmp == 0 ) continue;// divider must not be 0
+
+        val /= tmp;
+
+        for(int i =0 ; i< 3; i++) {
+          vec[i] *= val;
+        }
+
+        for(int i=0 ; i< 3; i++) {
+          cal_f[i] += vec[i];
+        }
+        // std :: array<double, 3> x_vector = p1.x;
+        // @TODO: insert calculation of forces here!
       }
-      tmp = pow(sqrt(tmp), 3);
-      val /= tmp;
-
-      for(int i =0 ; i< 3; i++) {
-        vec[i] *= val;
-      }
-
-      for(int i=0 ; i< 3; i++) {
-        cal_f[i] += vec[i];
-      }
-      // std :: array<double, 3> x_vector = p1.x;
-      // @TODO: insert calculation of forces here!
+      p1.setF(cal_f);
     }
-    p1.setF(cal_f);
 
-
-
-   // std::cout << "force: " << p1 << std::endl;
   }
+   // std::cout << "force: " << p1 << std::endl;
 }
 void calculateX() {
   for (auto &p : particles) {
     std::array<double, 3> vec = p.getX();
+
     for(int i =0 ; i< 3; i++) {
       vec[i] += delta_t * p.getV()[i];
-      vec[i] += (delta_t * delta_t * p.getF()[i]) / (2 * p.getM());
+      vec[i] += (delta_t * delta_t * p.getOldF()[i]) / (2 * p.getM());
     }
     p.setX(vec);
-    std::cout << "location: " << p << std::endl;
+    //std::cout << "location: " << p << std::endl;
     // @TODO: insert calculation of position updates here!
   }
 }
@@ -180,6 +181,5 @@ void plotParticles(int iteration) {
 
   outputWriter::VTKWriter writer2;
   writer2.writeFile(out_name, iteration,particles);
-
 
 }
