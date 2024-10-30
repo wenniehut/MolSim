@@ -54,6 +54,8 @@ const std::array<double, 3> &Particle::getOldF() const { return old_f; }
 double Particle::getM() const { return m; }
 
 int Particle::getType() const { return type; }
+
+//Setters for the particle
 ///////////////////////////////////////////////////
 void Particle::setX(std::array<double, 3> x_arg) { x = x_arg; }
 void Particle::setV(std::array<double, 3> v_arg) {v = v_arg; }
@@ -62,7 +64,6 @@ void Particle::setOldF(std::array<double, 3> oldf_arg) {old_f = oldf_arg; }
 void Particle::setM(double marg) { m = marg; }
 void Particle::setType(int type_arg) { type = type_arg; }
 ///////////////////////////////////////////////////
-
 
 
 std::string Particle::toString() const {

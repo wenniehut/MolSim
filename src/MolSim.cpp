@@ -6,7 +6,7 @@
 #include <iostream>
 #include <list>
 
-///////////////////////////////////
+
 #include "ParticleContainer.h"
 #include <cmath>
 #include "outputWriter/VTKWriter.h"
@@ -15,22 +15,17 @@
 #include <float.h>
 #include <unistd.h>
 #include <vector>
-//////////////////////////////////
 
 
 void plotParticles(int iteration);
 
 void printHelp();
-// constexpr double start_time = 0;
-// constexpr double end_time = 1000;
-// constexpr double delta_t = 0.014;
 double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
 std::string outputformat = ".vtu";
 
-// TODO: what data structure to pick?
-
+// TODO: what data structure to pick? -> std::vector
 std::vector<Particle> particles;
 
 
@@ -40,6 +35,7 @@ int main(int argc, char *argsv[]) {
   << "To run this program, please provide the file name as an argument, like this: `./Molsim abc.txt " << "\n"
   << "To see more options, type ./Molsim help or ./Molsim --help" << "\n\n";
 
+  
   for (int i = 0; i < argc; i++) {
     if (std::string(argsv[i]) == "--help" || std::string(argsv[i]) == "help") {
       printHelp();
@@ -63,22 +59,25 @@ int main(int argc, char *argsv[]) {
     outputformat = argsv[4];
     if (outputformat != ".xyz" && outputformat != ".vtu") {
       std::cout << "Invalid output format! Choose either 'xyz' or 'vtu'." << "\n\n";
-      return 1;
+      return 1; // exit with error
     }
   }
 
+  // create a particle container for forwading the particles, start time, end time, delta_t and outputformat
   ParticleContainer particle_container = ParticleContainer(particles, start_time, end_time,delta_t, outputformat);
 
+  //Inform the user about the input parameters
   std::cout << "Testfilename: " << argsv[1] << "\n";
   std::cout << "Start Time: " << start_time << "\n";
   std::cout << "Time End: " << end_time << "\n" ;
   std::cout << "Delta Time: " << delta_t << "\n";
   std::cout << "Output format: " << outputformat << "\n\n";
 
-   particle_container.calculate();
+  // calculate the position, force and velocity for all particles and plot them
+  particle_container.calculate();
 
   std::cout << "output written. Terminating..." << "\n";
-  return 0;
+  return 0;// exit without error
 }
 
 

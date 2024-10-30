@@ -46,6 +46,7 @@ public:
    * @param iteration the number of the current iteration,
    *        which is used to generate an unique filename
    */
+  
   void writeFile(const std::string &filename, int iteration, std::vector<Particle> &particles);
 
 private:

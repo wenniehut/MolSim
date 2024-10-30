@@ -68,7 +68,9 @@ public:
   double getM() const;
 
   int getType() const;
- /////////////////
+
+//setters for the particle class
+  /////////////////
   void setX(std::array<double, 3> x_arg);
   void setV(std::array<double,3> v_arg);
   void setF(std::array<double,3> f_arg);
@@ -76,6 +78,7 @@ public:
   void setM(double m_arg);
   void setType(int type);
  ////////////////////////
+
 
   bool operator==(Particle &other);
 
