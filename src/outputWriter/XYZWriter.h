@@ -10,8 +10,7 @@
 #include "Particle.h"
 
 #include <fstream>
-
-#include <vector>
+#include <list>
 
 namespace outputWriter {
 
@@ -22,7 +21,7 @@ public:
 
   virtual ~XYZWriter();
 
-  void plotParticles(std::vector<Particle> particles, const std::string &filename,
+  void plotParticles(std::list<Particle> particles, const std::string &filename,
                      int iteration);
 };
 

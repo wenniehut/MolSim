@@ -1,8 +1,14 @@
+/*
+ * Particle.cpp
+ *
+ *  Created on: 23.02.2010
+ *      Author: eckhardw
+ */
+
 #include "Particle.h"
 
 #include <iostream>
 #include "utils/ArrayUtils.h"
-
 
 Particle::Particle(int type_arg) {
   type = type_arg;
@@ -23,8 +29,14 @@ Particle::Particle(const Particle &other) {
 
 // Todo: maybe use initializater list instead of copy?
 Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
-                   double m_arg, int type_arg) : x(x_arg), v(v_arg), m(m_arg), type(type_arg), f{0., 0., 0.}, old_f{0., 0., 0.} {
-  std::cout << "Particle generated!" << "\n";
+                   double m_arg, int type_arg) {
+  x = x_arg;
+  v = v_arg;
+  m = m_arg;
+  type = type_arg;
+  f = {0., 0., 0.};
+  old_f = {0., 0., 0.};
+  std::cout << "Particle generated!" << std::endl;
 }
 
 Particle::~Particle() { std::cout << "Particle destructed!" << std::endl; }
@@ -41,24 +53,12 @@ double Particle::getM() const { return m; }
 
 int Particle::getType() const { return type; }
 
-
-///////////////////////////////////////////////////
-void Particle::setX(std::array<double, 3> x_arg) { x = x_arg; }
-void Particle::setV(std::array<double, 3> v_arg) {v = v_arg; }
-void Particle::setF(std::array<double, 3> f_arg) {f = f_arg; }
-void Particle::setOldF(std::array<double, 3> oldf_arg) {old_f = oldf_arg; }
-void Particle::setM(double marg) { m = marg; }
-void Particle::setType(int type_arg) { type = type_arg; }
-///////////////////////////////////////////////////
-
-
 std::string Particle::toString() const {
   std::stringstream stream;
   stream << "Particle: X:" << x << " v: " << v << " f: " << f
          << " old_f: " << old_f << " type: " << type;
   return stream.str();
 }
-
 
 bool Particle::operator==(Particle &other) {
   return (x == other.x) and (v == other.v) and (f == other.f) and

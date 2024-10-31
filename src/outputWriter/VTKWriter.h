@@ -12,8 +12,6 @@
 
 #include <list>
 
-#include <vector>
-
 namespace outputWriter {
 
 /**
@@ -30,14 +28,14 @@ public:
   /**
    * set up internal data structures and prepare to plot a particle.
    */
-  VTKFile_t initializeOutput(int numParticles);
+  void initializeOutput(int numParticles);
 
   /**
    * plot type, mass, position, velocity and force of a particle.
    *
    * @note: initializeOutput() must have been called before.
    */
-  void plotParticle(VTKFile_t& vtk_file, Particle &p);
+  void plotParticle(Particle &p);
 
   /**
    * writes the final output file.
@@ -46,8 +44,7 @@ public:
    * @param iteration the number of the current iteration,
    *        which is used to generate an unique filename
    */
-  
-  void writeFile(const std::string &filename, int iteration, std::vector<Particle> &particles);
+  void writeFile(const std::string &filename, int iteration);
 
 private:
   VTKFile_t *vtkFile;
