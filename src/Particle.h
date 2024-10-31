@@ -69,7 +69,9 @@ public:
 
   int getType() const;
 
-//setters for the particle class
+/**
+ * @brief Setters for the particle
+ */
   /////////////////
   void setX(std::array<double, 3> x_arg);
   void setV(std::array<double,3> v_arg);

@@ -8,37 +8,46 @@
 #include "ParticleContainer.h"
 
 
-//Constructor, which initializes the particle container with a vector of particles , start time, end time, delta_t and outputformat
-//outputformat can be either .vtu or .xyz
-ParticleContainer::ParticleContainer(std::vector<Particle> particles,double start_time,
-                                     double end_time , double delta_t,std::string outputformat){
+/**
+ * @brief Constructor, which initializes the particle container with a vector of particles , start time, end time, delta_t and outputformat
+ * outputformat can be either .vtu or .xyz
+ */
+ParticleContainer::ParticleContainer(std::vector<Particle> particles, double start_time,
+                                     double end_time, double delta_t, std::string outputformat)
+    : particles(std::move(particles)),  // Using std::move to avoid copying
+      start_time(start_time),
+      end_time(end_time),
+      delta_t(delta_t),
+      outputformat(std::move(outputformat)) { // std::move if outputformat is temporary
 
-  this->particles = particles;
-  this->delta_t = delta_t;
-  this->start_time = start_time;
-  this->end_time = end_time;
-  this->outputformat = outputformat;
-
-  positions.reserve(particles.size());
-  for(int i = 0 ; i< particles.size(); i++) {
-    positions[i] = particles[i].getX();
+  positions.reserve(this->particles.size());
+  for (const auto& particle : this->particles) {
+    positions.push_back(particle.getX());
   }
 
   std::cout << "ParticleContainer generated!\n";
- }
+}
 
 
-//Destructer 
+
+/**
+ * @brief Destructor
+ */
 ParticleContainer::~ParticleContainer(){
   std::cout << "ParticleContainer destructed!\n";
 }
 
-//In case the user wants to add a particle to the container
+/**
+ * @brief Add a particle to the container
+ */
 void ParticleContainer::addParticle(Particle particle){
   this->particles.push_back(particle);
   this->positions.push_back(particle.getX());
 }
 
+/**
+ * @brief Calculate the force between all particles version1
+ */
 void ParticleContainer :: calculateF_v1() {
   std::vector<Particle>::iterator iterator;
   iterator = particles.begin();
@@ -59,7 +68,7 @@ void ParticleContainer :: calculateF_v1() {
         for(int i=0 ; i< 3; i++) {
           cal_f[i] += (vec[i]* val);
         }
-        // @TODO: insert calculation of forces here!
+       
       }
       p1.setF(cal_f);
     }
@@ -67,7 +76,9 @@ void ParticleContainer :: calculateF_v1() {
 }
 
 
-//Calculates the force for all particles
+/**
+ * @brief Calculate the force between all particles version2 , optimized version by memory access
+ */
 void ParticleContainer :: calculateF_v2() {
 
   for (int i = 0; i < particles.size(); i++) {
@@ -95,14 +106,15 @@ void ParticleContainer :: calculateF_v2() {
         for(int k=0 ; k< 3; k++) {
           cal_f[k] += (vec[k]* val);
         }
-        // @TODO: insert calculation of forces here!
       }
     }
     particles[i].setF(cal_f);
   }
 }
 
-//Calculates the position for all particles
+/**
+ * @brief Calculate the position for all particles
+ */
 void ParticleContainer:: calculateX(){
    for (int i = 0; i < particles.size(); i++) {
     std::array<double, 3> vec = particles[i].getX();
@@ -117,7 +129,9 @@ void ParticleContainer:: calculateX(){
   
 }
 
-//Calculates the velocity for all particles
+/**
+ * @brief Calculate the velocity for all particles
+ */
 void ParticleContainer:: calculateV(){
   for (auto &p : particles) {
     std::array<double, 3> vec = p.getV();
@@ -129,24 +143,36 @@ void ParticleContainer:: calculateV(){
   
 }
 
-//Calculates the position, force and velocity for all particles
+/**
+ * @brief Calculate the position, force and velocity for all particles
+ */
 void ParticleContainer:: calculate(int version) {
    int iteration  = 0;
    double current_time = start_time;
 
    while (current_time < end_time) {
 
-    // calculate new x
+    /**
+     * @brief Calculate the position
+     */
     calculateX();
-    // calculate new f
+    /**
+     * @brief Calculate the force
+     */
     if(version == 1) calculateF_v1();
     else calculateF_v2();
-    // calculate new v
+
+    /**
+     * @brief Calculate the velocity
+     */
     calculateV();
 
     iteration++;
+    /**
+     * @brief Plot every 10th iteration
+     */
     if (iteration % 10 == 0) {
-      plotParticles(iteration); // plot every 10th iteration
+      plotParticles(iteration); 
     }
 
     std::cout << "Iteration " << iteration << " finished." << "\n";
@@ -156,6 +182,9 @@ void ParticleContainer:: calculate(int version) {
     return;
 }
 
+/**
+ * @brief Plot the particles in the container
+ */
 void ParticleContainer :: plotParticles(int iteration) {
   std::cout << "Plotting Particles..." << "\n";
 

@@ -9,6 +9,9 @@
 #pragma once
 
 
+/**
+ * @brief ParticleContainer class
+ */
 class ParticleContainer {
 
   public:
@@ -16,33 +19,54 @@ class ParticleContainer {
    ParticleContainer(std::vector<Particle> particles, double start_time, double end_time, double delta_t,
     std::string outputformat);
 
-  //Destructor  
+  /**
+   * @brief Destructor
+   */
    ~ParticleContainer();
 
   
+    /**
+     * @brief Add a particle to the container
+     */
     void addParticle(Particle particle);
 
-    //calculate the force for all particles
+    /**
+     * @brief Calculate the force between all particles version1
+     */
     void calculateF_v1();
 
+    /**
+     * @brief Calculate the force between all particles version2 , optimized version by memory access
+     */
     void calculateF_v2();
 
-     //calculate the position for all particles
+     /**
+      * @brief Calculate the position for all particles
+      */
     void calculateX();
 
-    //calculate the velocity for all particles
+    /**
+     * @brief Calculate the velocity for all particles
+     */
     void calculateV();
 
-    //calculate the position, force and velocity for all particles
-    //the two versions of the force calculation v1 
+    /**
+     * @brief Calculate the position, force and velocity for all particles
+     * @param version 1 or 2
+     */
     void calculate(int version);
 
-    //Plots the particles in the container
+    /** 
+     * @brief Plot the particles in the container
+     */
     void plotParticles(int iterations);
 
   
   private:
-    //Member variables 
+    /**
+     * @brief Member variables
+     */
+
     std::vector<Particle> particles;
     std::vector<std::array<double,3>> positions;
     double start_time = 0;

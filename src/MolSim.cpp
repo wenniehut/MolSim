@@ -1,3 +1,9 @@
+/**
+ * MolSim.cpp
+ * @brief created by: Group D , main file for the simulation
+ * @date 31.10.2024
+ * 
+ */
 
 #include "FileReader.h"
 #include "outputWriter/XYZWriter.h"
@@ -17,15 +23,24 @@
 #include <chrono>
 
 
+/**
+ * @brief Function to plot the particles
+ */
 void plotParticles(int iteration);
 
+/**
+ * @brief Function to print the help message
+ */
 void printHelp();
 double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
 std::string outputformat = ".vtu";
 
-// TODO: what data structure to pick? -> std::vector
+
+/**
+ * @brief TODO: what data structure to pick? -> std::vector
+ */
 std::vector<Particle> particles;
 
 
@@ -63,33 +78,51 @@ int main(int argc, char *argsv[]) {
     }
   }
 
-  // start the timer
+  /**
+   * @brief Start the timer
+   */
   auto start = std::chrono::high_resolution_clock::now();
 
-  // create a particle container for forwading the particles, start time, end time, delta_t and outputformat
+  /**
+   * @brief Create a particle container for forwarding the particles, start time, end time, delta_t and outputformat
+   */
   ParticleContainer particle_container = ParticleContainer(particles, start_time, end_time,delta_t, outputformat);
 
-  //Inform the user about the input parameters
+  /**
+   * @brief Inform the user about the input parameters
+   */
   std::cout << "Testfilename: " << argsv[1] << "\n";
   std::cout << "Start Time: " << start_time << "\n";
   std::cout << "Time End: " << end_time << "\n" ;
   std::cout << "Delta Time: " << delta_t << "\n";
   std::cout << "Output format: " << outputformat << "\n\n";
 
-  // calculate the position, force and velocity for all particles and plot them
-  //version 2 as the default force calculation
+
+  /**
+   * @brief Calculate the position, force and velocity for all particles
+   * @param version : 2 as the default force calculation, which is optimized for calculation force .
+   */
   particle_container.calculate(2);
 
   std::cout << "output written. Terminating..." << "\n";
    
-  // stop the timer
+  
+  /**
+   * @brief Stop the timer
+   */
   auto end = std::chrono::high_resolution_clock::now();
 
-  // calculate the duration
+  
+  /**
+   * @brief Calculate the duration
+   */
   std::chrono::duration<double> duration = end - start;
   std::cout << "Duration: " << duration.count() << "s" << "\n";
 
-  return 0;// exit without error
+  /**
+   * @brief exit without error
+   */
+  return 0;
 }
 
 
