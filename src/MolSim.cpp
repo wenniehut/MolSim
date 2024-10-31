@@ -38,9 +38,6 @@ double delta_t = 0.014;
 std::string outputformat = ".vtu";
 
 
-/**
- * @brief TODO: what data structure to pick? -> std::vector
- */
 std::vector<Particle> particles;
 
 
@@ -78,19 +75,13 @@ int main(int argc, char *argsv[]) {
     }
   }
 
-  /**
-   * @brief Start the timer
-   */
+  // Start the timer
   auto start = std::chrono::high_resolution_clock::now();
 
-  /**
-   * @brief Create a particle container for forwarding the particles, start time, end time, delta_t and outputformat
-   */
+  // Create a particle container for forwarding the particles, start time, end time, delta_t and outputformat
   ParticleContainer particle_container = ParticleContainer(particles, start_time, end_time,delta_t, outputformat);
 
-  /**
-   * @brief Inform the user about the input parameters
-   */
+  // Inform the user about the input parameters
   std::cout << "Testfilename: " << argsv[1] << "\n";
   std::cout << "Start Time: " << start_time << "\n";
   std::cout << "Time End: " << end_time << "\n" ;
@@ -98,30 +89,21 @@ int main(int argc, char *argsv[]) {
   std::cout << "Output format: " << outputformat << "\n\n";
 
 
-  /**
-   * @brief Calculate the position, force and velocity for all particles
-   * @param version : 2 as the default force calculation, which is optimized for calculation force .
-   */
+  // Calculate the position, force and velocity for all particles
   particle_container.calculate(2);
 
   std::cout << "output written. Terminating..." << "\n";
    
   
-  /**
-   * @brief Stop the timer
-   */
+  // Stop the timer
   auto end = std::chrono::high_resolution_clock::now();
 
   
-  /**
-   * @brief Calculate the duration
-   */
+  // Calculate the duration
   std::chrono::duration<double> duration = end - start;
   std::cout << "Duration: " << duration.count() << "s" << "\n";
 
-  /**
-   * @brief exit without error
-   */
+
   return 0;
 }
 
@@ -133,6 +115,6 @@ void printHelp() {
   std::cout << "  1.  Specify the input file name (required)" << "\n";
   std::cout << "  2.  Set the delta time (optional, default is 0.014)" << "\n";
   std::cout << "  3.  Set the end time (optional, default is 1000)" << "\n";
-  std::cout << "  4.  Specify output format: either \".xyz\" or \".vtu\" (optional, default is \".vtu \")" << "\n";
+  std::cout << R"(  4.  Specify output format: either ".xyz" or ".vtu" (optional, default is ".vtu "))" << "\n";
   std::cout << "  --help, help message" << "\n\n";
 }

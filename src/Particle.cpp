@@ -1,11 +1,3 @@
-/**
- * @file Particle.cpp
- * @author eckhardw
- * @brief this class represents a particle
- * @date 23.02.2010
- *
- */
-
 #include "Particle.h"
 
 #include <iostream>
@@ -49,9 +41,7 @@ double Particle::getM() const { return m; }
 
 int Particle::getType() const { return type; }
 
-/**
- * @brief Setters for the particle
- */
+
 ///////////////////////////////////////////////////
 void Particle::setX(std::array<double, 3> x_arg) { x = x_arg; }
 void Particle::setV(std::array<double, 3> v_arg) {v = v_arg; }
