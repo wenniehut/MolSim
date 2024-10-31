@@ -65,15 +65,31 @@ class ParticleContainer {
 
   
   private:
-    /**
-     * @brief Member variables
-     */
 
+
+    /**
+     * Particles stored in the container
+     */
     std::vector<Particle> particles;
+    /**
+     * Positions of the particles stored separately for more efficient access
+     */
     std::vector<std::array<double,3>> positions;
+    /**
+     * Start time of the simulation
+     */
     double start_time = 0;
+    /**
+     * End time of the simulation
+     */
     double end_time = 1000;
+    /**
+     * Time step of the simulation
+     */
     double delta_t;
+    /**
+     * Output format of the data, either .vtu or .xyz
+     */
     std::string outputformat;
 
 
