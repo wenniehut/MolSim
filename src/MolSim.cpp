@@ -37,7 +37,6 @@ double end_time = 1000;
 double delta_t = 0.014;
 std::string outputformat = ".vtu";
 
-
 std::vector<Particle> particles;
 
 
